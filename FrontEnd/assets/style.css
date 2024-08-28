@@ -34,6 +34,7 @@ body {
 ol, ul {
 	list-style: none;
 }
+
 blockquote, q {
 	quotes: none;
 }
@@ -94,7 +95,10 @@ nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
-
+ul li a{
+	text-decoration: none;
+	color: #222;
+}
 li:hover {
 	color: #B1663C;
 }
@@ -125,6 +129,39 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+#portfolio .categories{
+	display: flex;
+	justify-content: center;
+	margin-bottom: 50px;
+}
+#portfolio .categories .filter{
+	border: 1px solid #1D6154;
+	color: #1D6154;
+	margin-right: 20px;
+	padding: 10px 15px;
+	border-radius: 60px;
+	font-weight: 500;
+}
+#portfolio .categories .filter:hover{
+	background: #1D6154;
+	color: #fff;
+	cursor: pointer;
+}#portfolio h2{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#portfolio h2 span{
+	font-size: 14px;
+	margin-left: 30px;
+	cursor: pointer;
+	/* display: none; */
+}
+#portfolio h2 span i{
+	margin-right: 10px;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -137,9 +174,42 @@ li:hover {
 	width: 100%;
 
 }
+/* style modal 1 */
+section.modal-photo{
+	z-index: 999;
+	background: #fff;
+	max-width: 630px;
+	width: 100%;
+	height: auto;
+	border: 2px solid rgb(240, 121, 121);
+	border-radius: 10px;
+	padding: 20px;
+	position: absolute;
+	top: 70%;
+	align-items: center;
+	left: 50%;
+	transform: translate(-50%);
+	display: none;
+}
+section.modal-photo .title-modal{
+	margin-bottom: 30px;
+	text-align: center;
+	font-size: 26px;
+	color: black;
+	font-weight: 400;
+}
+section.modal-photo .modal-form{
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+}
+section.modal-photo .modal-form .input[type="text"]{
+	/* border: none; */
+}
+
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
 #contact > * {
 	text-align: center;
@@ -179,6 +249,29 @@ input[type="submit"]{
 	text-align: center;
 	border-radius: 60px ;
 }
+/* form login */
+section#form{
+	height: 63vh;
+	text-align: center;
+}
+section#form form{
+	width: 400px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	
+}
+section#form form label{
+	text-align: left;
+	margin: 2em 0 1em 0;
+	
+}
+section#form form input{
+	height: 35px;
+	/* margin-bottom: 15px; */
+	outline: none;
+}
+
 
 footer nav ul {
 	display: flex;

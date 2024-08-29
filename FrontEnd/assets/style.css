@@ -169,11 +169,19 @@ li:hover {
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 }
-
+.gallery-modal {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
+}
+.gallery-modal img,
 .gallery img {
 	width: 100%;
 
 }
+
 /* style modal 1 */
 section.modal-photo{
 	z-index: 999;
@@ -183,13 +191,23 @@ section.modal-photo{
 	height: auto;
 	border: 2px solid rgb(240, 121, 121);
 	border-radius: 10px;
-	padding: 20px;
+	padding: 50px;
 	position: absolute;
 	top: 70%;
 	align-items: center;
 	left: 50%;
 	transform: translate(-50%);
 	display: none;
+	transition: .5s ease-in-out;
+}
+
+section.modal-photo .fa-xmark{
+	position: relative;
+	top: -80px;
+	left: 620px;
+	cursor: pointer;
+	font-size: 17px;
+	transition: 0.5s ease-in-out;
 }
 section.modal-photo .title-modal{
 	margin-bottom: 30px;
@@ -197,14 +215,39 @@ section.modal-photo .title-modal{
 	font-size: 26px;
 	color: black;
 	font-weight: 400;
+	height: auto;
 }
 section.modal-photo .modal-form{
 	margin-top: 20px;
 	display: flex;
 	flex-direction: column;
 }
-section.modal-photo .modal-form .input[type="text"]{
-	/* border: none; */
+.gallery-modal{
+	padding-top: 20px;
+}
+section.modal-photo .modal-form #input-gallery{
+	border: none;
+	height: 45px;
+	width: 100%;
+	border-bottom: 2px solid #222;
+	margin-top: 20px;
+	outline: none;
+	font-size: 17px;
+}
+section.modal-photo .modal-form #submit-btn{
+	padding: 10px 20px;
+}
+section.modal-photo .modal-body .gallery-modal .fa-trash-can{
+	background: black;
+	color: #fff;
+	padding: 5px;
+	border-radius: 5px;
+	position: relative;
+	top: -140px;
+	left: 75px;
+	object-fit: cover;
+	cursor: pointer;
+
 }
 
 #contact {

@@ -42,7 +42,7 @@ async function AjoutPost() {
             // const containerElementModal = galleryModal.appendChild(figureElement);
             // containerElementModal.appendChild(imageElement);
 
-            
+
         }
 
     } catch (error) {
@@ -59,7 +59,7 @@ async function AjoutPostModal() {
         const req2 = await fetch(url2);
         const response2 = await req2.json();
 
-        console.log(response2);
+        // console.log(response2);
 
         //parcourir mes post traveaux
         for (let i = 0; i < response2.length; i++) {
@@ -77,7 +77,7 @@ async function AjoutPostModal() {
             // titleElementModal.innerText = article.title;
 
             //Rattacher nos balises a notre DOM
-            
+
 
             //rattacher les elements au modal
             const galleryModal = document.querySelector(".gallery-modal");
@@ -85,9 +85,26 @@ async function AjoutPostModal() {
             containerElementModal.appendChild(imageElementModal);
             containerElementModal.appendChild(iElement);
 
-            iElement.classList.add("fa-regular","fa-trash-can");
+            iElement.classList.add("fa-regular", "fa-trash-can");
+            const dataValue = articleModal.id;
+            iElement.setAttribute('data-id', dataValue);
 
-            
+            //selectionner le bouton supprimer
+            // const btnSuppr = document.querySelectorAll('.gallery-modal i');
+
+            // for(let p=0; p < btnSuppr.length; p++){
+            iElement.addEventListener('click', async function () {
+                // alert('delete post :' + dataValue);
+                const postDelete = await fetch("http://localhost:5678/api/works/" + dataValue, {
+                   method: "DELETE"
+                })
+                .then((response) => alert('traveaux n° '+dataValue + ' a été supprimer avec succès.'))
+                console.log(postDelete);
+            })
+            // }
+
+
+
         }
 
     } catch (error) {
@@ -113,7 +130,6 @@ async function RecupCateg() {
             const categElement = document.createElement("div");
             categElement.classList.add('filter');
 
-
             //Associer les valeurs des articles respectifs
             categElement.innerText = categories.name;
 
@@ -124,59 +140,79 @@ async function RecupCateg() {
             const category = document.querySelector(".categories");
             const filterElement = category.appendChild(categElement);
 
-            // if(categElement != 'All'){
-            //     let categAll = categElement.innerHTML = 'Tous';
-            //     category.appendChild(categAll);
-            // }
+            //filtrer mes traveaux par categories
+            const urlFilter = "http://localhost:5678/api/works";
+            // console.log(url);
+            const reqFilter = await fetch(urlFilter);
+            const responseFilter = await reqFilter.json();
 
-        }
-
-        //filtrer mes traveaux par categories
-        const btnFilterAll = document.querySelectorAll(".categories .filter");
-
-        for (let i = 0; i < btnFilterAll.length; i++) {
-            btnFilterAll[i].addEventListener("click", function () {
-                const filterTraveaux = res.filter(function (categ) {
-                    return categ.i = res.id;
+            categElement.addEventListener('click', function () {
+                // const resCateg = responseFilter[i].category.name;
+                const resCateg = categories.name;
+                const filterTraveaux = responseFilter.filter(function (categ) {
+                    return categ.category.name == resCateg;
 
                 })
-                console.log(filterTraveaux)
-                // document.querySelector('.gallery').innerHTML = "";
-                // AjoutPost();
+                //Effacer tous les traveaux dans le DOM
+                document.querySelector('.gallery').innerHTML = "";
+
+                //Afficher tous les post filtrés
+                //parcourir mes post traveaux
+                for (let i = 0; i < filterTraveaux.length; i++) {
+
+
+                    //Création des balises HTML
+                    const articleFiltres = filterTraveaux[i];
+
+                    const figureElementFiltres = document.createElement("figure");
+                    const imageElementFiltres = document.createElement("img");
+                    const titleElementFiltres = document.createElement("figcaption");
+
+                    //Associer les valeurs des articles respectifs
+                    imageElementFiltres.src = articleFiltres.imageUrl;
+                    titleElementFiltres.innerText = articleFiltres.title;
+
+                    //Rattacher nos balises a notre DOM
+                    const galleryFiltres = document.querySelector(".gallery");
+                    const containerElementFiltres = galleryFiltres.appendChild(figureElementFiltres);
+
+                    containerElementFiltres.appendChild(imageElementFiltres);
+                    containerElementFiltres.appendChild(titleElementFiltres);
+
+
+                }
 
             })
+
+
         }
-
-        //  console.log(btnFilterAll);
-
-        //Ajout bouton TOUS
-        // let tabTous = [
-        //     {
-        //     'id':4,
-        //     'name':'Tous'
-        //     }
-        // ]
-        // let newTab = res.push(tabTous);
-        // console.log(newTab);
 
     } catch (error) {
         console.log('Problème lors de chargement des categories', error);
     }
 }
+//btn filter tous
+const filterTous = document.querySelector('.categories .filter_Tous');
+filterTous.addEventListener("click", () => {
+    //Effacer tous les traveaux dans le DOM
+    document.querySelector('.gallery').innerHTML = "";
+    AjoutPost();
+})
 
 //boite modal
 const modifTrav = document.querySelector('.modif-tr');
 const modalTrav = document.querySelector('section.modal-photo');
 const closeModalTrav = document.querySelector('.fa-xmark');
 
-modifTrav.addEventListener('click', function(){
+modifTrav.addEventListener('click', function () {
     modalTrav.style.display = "block";
 })
 
-closeModalTrav.addEventListener("click", function(){
+closeModalTrav.addEventListener("click", function () {
     modalTrav.style.display = "none";
 
 })
+
 
 
 AjoutPost();

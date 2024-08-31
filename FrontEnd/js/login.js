@@ -10,3 +10,14 @@ formLogin.addEventListener("submit", (event) =>{
     
 
 })
+
+
+
+// curl -X 'POST' \
+//   'http://localhost:5678/api/users/login' \
+//   -H 'accept: application/json' \
+//   -H 'Content-Type: application/json' \
+//   -d '{
+//   "email": "sophie.bluel@test.tld",
+//   "password": "S0phie"
+// }'

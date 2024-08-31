@@ -7,8 +7,12 @@ const swaggerUi = require('swagger-ui-express')
 const yaml = require('yamljs')
 const swaggerDocs = yaml.load('swagger.yaml')
 const app = express()
+
+//Autoriser toutes les requetes CORS
+
+
 app.use(cors())
-app.use(express.json())
+app.use(express.json()) 
 app.use(express.urlencoded({ extended: true }))
 app.use(helmet({
       crossOriginResourcePolicy: false,

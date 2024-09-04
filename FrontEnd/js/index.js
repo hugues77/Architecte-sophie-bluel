@@ -1,8 +1,3 @@
-// import { AjoutPost } from "./functions";
-// alert('toto');
-// console.log('toto');
-// const article = AjoutPost();
-
 
 // function pour Ajout des post 
 async function AjoutPost() {
@@ -90,19 +85,28 @@ async function AjoutPostModal() {
             iElement.setAttribute('data-id', dataValue);
 
             //selectionner le bouton supprimer
-            // const btnSuppr = document.querySelectorAll('.gallery-modal i');
 
-            // for(let p=0; p < btnSuppr.length; p++){
             iElement.addEventListener('click', async function () {
                 // alert('delete post :' + dataValue);
-                const postDelete = await fetch("http://localhost:5678/api/works/" + dataValue, {
-                   method: "DELETE"
+                await fetch("http://localhost:5678/api/works/" + dataValue, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${isLogin}`
+                    }
                 })
-                .then((response) => alert('traveaux n° '+dataValue + ' a été supprimer avec succès.'))
-                console.log(postDelete);
-            })
-            // }
+                    .then(response => {
+                        //    console.log(response);
+                        if (response.ok) {
+                            alert(`le traveaux n° ${dataValue} à été supprimé avec succès `);
+                            window.location.href="index.html";
 
+                        } else {
+                            alert("Echec! une erreur est survenue")
+                        }
+                    })
+
+                // console.log(postDelete);
+            })
 
 
         }
@@ -198,6 +202,26 @@ filterTous.addEventListener("click", () => {
     document.querySelector('.gallery').innerHTML = "";
     AjoutPost();
 })
+
+//verifier si user est connecter
+const isLogin = window.localStorage.getItem('token');
+const loginItem = document.querySelector("ul .login_item");
+if (isLogin) {
+    loginItem.textContent = "logout";
+    loginItem.classList.add('logout_item');
+
+    //on affiche le bouton modifier post
+    let showModal = document.querySelector("#portfolio .modif-tr");
+    showModal.style.display = "block";
+    //deconnexion utilisateur
+    const logoutItem = document.querySelector("ul .logout_item");
+    logoutItem.addEventListener('click', () => {
+        window.localStorage.removeItem('token');
+        window.location.href = "index.html";
+
+    })
+
+}
 
 //boite modal
 const modifTrav = document.querySelector('.modif-tr');

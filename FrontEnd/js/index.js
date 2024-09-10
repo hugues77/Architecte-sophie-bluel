@@ -21,6 +21,8 @@ async function AjoutPost() {
             const imageElement = document.createElement("img");
             const titleElement = document.createElement("figcaption");
 
+            // const idPost = 
+
             //Associer les valeurs des articles respectifs
             imageElement.src = article.imageUrl;
             titleElement.innerText = article.title;
@@ -31,6 +33,14 @@ async function AjoutPost() {
 
             containerElement.appendChild(imageElement);
             containerElement.appendChild(titleElement);
+
+            //injecter data id dans chaque post
+            // figureElement.setAttribute('data-post', article.id);
+            // console.log(article.id)
+            // figureElement.addEventListener('click', () =>{
+            //     alert(article.id);
+            // })
+
 
             // //rattacher les elements au modal
             // const galleryModal = document.querySelector(".gallery-modal");
@@ -81,6 +91,7 @@ async function AjoutPostModal() {
             containerElementModal.appendChild(iElement);
 
             iElement.classList.add("fa-regular", "fa-trash-can");
+
             const dataValue = articleModal.id;
             iElement.setAttribute('data-id', dataValue);
 
@@ -97,15 +108,16 @@ async function AjoutPostModal() {
                     .then(response => {
                         //    console.log(response);
                         if (response.ok) {
-                            alert(`le traveaux n° ${dataValue} à été supprimé avec succès `);
-                            window.location.href="index.html";
+                            // alert(`le traveaux n° ${dataValue} à été supprimé avec succès `);
+                            // window.location.href="index.html";
+                            //une fois supprimer le traveau, enlever le post dans le modal et le DOM
+                            containerElementModal.innerHTML = "";
 
                         } else {
                             alert("Echec! une erreur est survenue")
                         }
                     })
 
-                // console.log(postDelete);
             })
 
 
@@ -137,12 +149,19 @@ async function RecupCateg() {
             //Associer les valeurs des articles respectifs
             categElement.innerText = categories.name;
 
-            // verifier si dans la liste des catégories, il y a pas 'tous' et cree la categorie tous
-
-
             //Rattacher nos balises a notre DOM
             const category = document.querySelector(".categories");
             const filterElement = category.appendChild(categElement);
+
+            //creation de la liste des categories pour le select: Ajout photo (Modal)
+            const allCategories = document.querySelector('form #all_categorie');
+            const optionSelect = document.createElement("option");
+            optionSelect.innerText = categories.name;
+            optionSelect.value = categories.id;
+
+            // optionSelect.appendChild(allCategories);
+            allCategories.appendChild(optionSelect);
+
 
             //filtrer mes traveaux par categories
             const urlFilter = "http://localhost:5678/api/works";
@@ -183,7 +202,6 @@ async function RecupCateg() {
                     containerElementFiltres.appendChild(imageElementFiltres);
                     containerElementFiltres.appendChild(titleElementFiltres);
 
-
                 }
 
             })
@@ -223,19 +241,178 @@ if (isLogin) {
 
 }
 
+//function pour envoyer des fichier
+
+async function SendTraveaux(token, formData) {
+
+    await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+        body: formData
+    })
+        .then(response => {
+            // console.log(response);
+            if (response.ok) {
+                alert(`le projet a été ajouté avec succès. `);
+                // window.location.href="index.html";
+                // console.log('succèss')
+                AjoutPost();
+
+
+            } else {
+                alert("Echec! une erreur est survenue ")
+                // console.log('echec')
+            }
+        })
+        .catch(error => {
+            console.log("Une erreur s'est produite lors de l'envoie : ", error);
+        })
+}
+
 //boite modal
+let portfolio = document.querySelector("#portfolio");
 const modifTrav = document.querySelector('.modif-tr');
-const modalTrav = document.querySelector('section.modal-photo');
-const closeModalTrav = document.querySelector('.fa-xmark');
+
+const modalTrav = document.querySelector('section.gallery-photo');
+const modalAjout = document.querySelector('section.ajout-photo');
+
+const closeModalTrav = document.querySelector('.icon-x .fa-xmark');
+
+const closeModalAjout = document.querySelector('.icons .fa-xmark');
+const showModalTravBtn = document.querySelector('.icons .fa-arrow-left-long');
+
+const modalBtn = document.querySelector('.modal-btn');
+
+
 
 modifTrav.addEventListener('click', function () {
     modalTrav.style.display = "block";
+    portfolio.classList.add('active');
 })
 
 closeModalTrav.addEventListener("click", function () {
     modalTrav.style.display = "none";
+    portfolio.classList.remove('active');
+})
+
+closeModalAjout.addEventListener('click', () => {
+    modalAjout.style.display = "none";
+    portfolio.classList.remove('active');
+})
+showModalTravBtn.addEventListener('click', function () {
+    modalTrav.style.display = "block";
+    modalAjout.style.display = "none";
+    portfolio.classList.add('active');
+})
+modalBtn.addEventListener('click', () => {
+    modalAjout.style.display = "block";
+    modalTrav.style.display = "none";
+    portfolio.classList.add('active');
+})
+
+
+//function ajout photo dans notre API
+const formAddFile = document.querySelector(".ajout-photo .add_gallery");
+const imgContainer = document.querySelector(".ajout-photo .img-container");
+const errorModal = document.querySelector(".form_error_modal");
+
+
+const addFileInput = formAddFile.querySelector('#input-add-gallery');
+const categFile = formAddFile.querySelector("#all_categorie");
+
+const buttonSendFile = document.querySelector('.btn-valid');
+
+// previsualisation image - preview image
+const imageInput = document.getElementById('imageInput');
+// const imageURL = URL.createObjectURL(imageInput);
+
+
+imageInput.addEventListener('change', () =>{
+    const uploadFile = imageInput.files[0];
+    const imgPreview = document.createElement('img');
+    
+    imgPreview.src = URL.createObjectURL(uploadFile);
+    console.log(imgPreview);
+})
+
+
+//activer le bouton valider; une fois que user ecrit dans l'input
+addFileInput.addEventListener('keyup', () => {
+    if (addFileInput.value.length > 0) {
+        buttonSendFile.classList.add('active');
+
+    } else {
+        buttonSendFile.classList.remove('active');
+    }
+})
+
+//traitement formulaire
+formAddFile.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const title = addFileInput.value;
+    const category = categFile.value;
+    const image = imageInput.files[0];
+
+
+    // console.log(image.name);
+
+    // const formData_gallery = new FormData(formAddFile);
+
+
+
+    // console.log(imageInput); 
+
+    if (title === "" || category === "" || image == null) {
+        // alert('remplir les champs svp');
+        errorModal.style.display = "block";
+        errorModal.textContent = "Remplir tous  les champs svp";
+
+    } else {
+        let imageType = image.type;
+        let imageName = image.name;
+        let imageSize = image.size;
+        //on  verifie l'image
+        if (imageSize > 4000000) {
+            errorModal.style.display = "block";
+            errorModal.textContent = "la taille du fichier ne doit pas depasser 4 Mo";
+
+        } else if (!["image/jpeg", "image/png"].includes(imageType)) {
+            errorModal.style.display = "block";
+            errorModal.textContent = "le type du fichier n'est pas autorisé";
+
+        } else {
+            //envoie du fichier vers l'API  par la method POST
+            let tokenUser = localStorage.getItem('token');
+            const formData = new FormData();
+
+            formData.append("title", title);
+            formData.append("category", category);
+            formData.append("image", image);
+
+            // console.log(tokenUser);
+
+            //on exécute la fonction
+            const final = SendTraveaux(tokenUser, formData);
+            if(final){
+                modalAjout.style.display = "none";
+                portfolio.classList.remove('active');
+
+                // document.querySelector('.gallery').innerHTML = "";
+
+                // AjoutPost();
+                // console.log('super!')
+            }
+        }
+    }
+    
+
 
 })
+
+
 
 
 

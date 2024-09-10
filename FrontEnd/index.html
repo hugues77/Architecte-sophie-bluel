@@ -55,20 +55,69 @@
 
 			</div>
 		</section>
-		<!-- modal, envoie / supprimer des traveaux -->
-		<section class="modal-photo">
+		<!-- modal,  supprimer des traveaux -->
+		<section class="modal-photo gallery-photo">
+			<div class="icon-x">
+				<i class="fa-solid fa-xmark"></i>
+			</div>
 			<div class="title-modal">Galerie photo</div>
-			<i class="fa-solid fa-xmark"></i>
 			<div class="modal-body">
 				<div class="gallery-modal">
-					
+
 				</div>
 			</div>
-			<div class="modal-form">
-				<input type="text" name="" id="input-gallery">
-				<input type="submit" id="submit-btn" value="Ajouter une photo">
-			</div>
+			<hr>
+			<div class="modal-btn">Ajouter une photo</div>
 		</section>
+
+		<!-- modal,  envoie des traveaux -->
+		<section class="modal-photo ajout-photo">
+			<div class="icons">
+				<i class="fa-solid fa-arrow-left-long"></i>
+				<i class="fa-solid fa-xmark"></i>
+			</div>
+			<div class="title-modal">Ajout photo</div>
+			<div class="form_error_modal"></div>
+
+			<div class="modal-body">
+				<form action="#" method="post" class="add_gallery">
+					<div class="gallery-modal image">
+						<div class="img-container">
+							<div class="image_head"><i class="fa-regular fa-image"></i></div><br>
+
+							<input type="file" name="image" id="imageInput" accept="image/*">
+							<label for="imageInput">
+								<i class="fa-solid fa-plus"></i>Ajouter photo
+							</label>
+
+							<p class="format">jpg, png : 4mo max</p>
+						</div>
+
+						<!-- image de previsualisation -->
+						<div class="img-preview">
+							<img src="./assets/images/restaurant-sushisen-londres.png" alt="" class="image-preview">
+
+						</div>
+					</div>
+
+					<label for="input-add-gallery">Titre</label>
+					<input type="text" name="title" id="input-add-gallery">
+
+					<label for="all_categorie">Catégorie</label>
+					<select name="category" id="all_categorie">
+						<!-- <option value="" selected>Choisir une catégorie</option> -->
+
+					</select>
+					<hr>
+					<input type="submit" value="valider" class="btn-valid">
+				</form>
+
+			</div>
+
+			</div>
+
+		</section>
+
 		<section id="contact">
 			<h2>Contact</h2>
 			<p>Vous avez un projet ? Discutons-en !</p>
@@ -93,8 +142,8 @@
 	</footer>
 
 	<!-- link js -->
-	<script type="text/javascript"  src="./js/index.js"></script>
-	
+	<script type="text/javascript" src="./js/index.js"></script>
+
 </body>
 
 </html>

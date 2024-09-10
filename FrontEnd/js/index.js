@@ -262,7 +262,7 @@ async function SendTraveaux(token, formData) {
 
 
             } else {
-                alert("Echec! une erreur est survenue ")
+                alert(token)
                 // console.log('echec')
             }
         })
@@ -331,10 +331,17 @@ const imageInput = document.getElementById('imageInput');
 
 imageInput.addEventListener('change', () =>{
     const uploadFile = imageInput.files[0];
+    const containerImgPreview = document.querySelector('.image .img-preview');
+    const containerImgheader = document.querySelector('.image .img-container');
+    const containerImage = document.querySelector('.image');
     const imgPreview = document.createElement('img');
     
     imgPreview.src = URL.createObjectURL(uploadFile);
-    console.log(imgPreview);
+    containerImgheader.style.display ="none";
+    // imgPreview.append();
+    // console.log(imgPreview);
+    imgPreview.classList.add('image-preview');
+    containerImage.appendChild(imgPreview);
 })
 
 

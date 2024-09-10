@@ -247,7 +247,7 @@ section.ajout-photo .image .img-container{
 section.ajout-photo .image .img-preview{
 	display: none;
 }
-section.ajout-photo .image .img-preview img{
+section.ajout-photo .image .image-preview{
 	max-height: 169px;
 	width: 129px;
 	/* text-align: center; */

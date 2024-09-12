@@ -47,76 +47,74 @@
 		<section id="portfolio">
 			<h2>Mes Projets <span class="modif-tr"><i class="fa-regular fa-pen-to-square"></i>modifier</span></h2>
 			<!-- mes filtres -->
+			<div class="filter filter_Tous">Tous</div>
 			<div class="categories">
-				<div class="filter filter_Tous">Tous</div>
-
+				
 			</div>
 			<div class="gallery">
 
 			</div>
 		</section>
-		<!-- modal,  supprimer des traveaux -->
-		<section class="modal-photo gallery-photo">
-			<div class="icon-x">
-				<i class="fa-solid fa-xmark"></i>
-			</div>
-			<div class="title-modal">Galerie photo</div>
-			<div class="modal-body">
-				<div class="gallery-modal">
+		
 
+		<!-- modal,  envoie / suppression des traveaux -->
+		<aside class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="false"
+			aria-labelledby="titlemodal">
+			<div class="modal-photo">
+				<div class="icons">
+					<i class="fa-solid fa-arrow-left-long"></i>
+					<i class="fa-solid fa-xmark"></i>
 				</div>
-			</div>
-			<hr>
-			<div class="modal-btn">Ajouter une photo</div>
-		</section>
+				<div class="form_error_modal"></div>
+				<h2 class="title-modal"></h2>
 
-		<!-- modal,  envoie des traveaux -->
-		<section class="modal-photo ajout-photo">
-			<div class="icons">
-				<i class="fa-solid fa-arrow-left-long"></i>
-				<i class="fa-solid fa-xmark"></i>
-			</div>
-			<div class="title-modal">Ajout photo</div>
-			<div class="form_error_modal"></div>
+				<div class="gallery-photo">
+					<div class="gallery-modal">
 
-			<div class="modal-body">
-				<form action="#" method="post" class="add_gallery">
-					<div class="gallery-modal image">
-						<div class="img-container">
-							<div class="image_head"><i class="fa-regular fa-image"></i></div><br>
-
-							<input type="file" name="image" id="imageInput" accept="image/*">
-							<label for="imageInput">
-								<i class="fa-solid fa-plus"></i>Ajouter photo
-							</label>
-
-							<p class="format">jpg, png : 4mo max</p>
-						</div>
-
-						<!-- image de previsualisation -->
-						<div class="img-preview">
-							<!-- <img src="./assets/images/restaurant-sushisen-londres.png" alt="" class="image-preview"> -->
-
-						</div>
 					</div>
-
-					<label for="input-add-gallery">Titre</label>
-					<input type="text" name="title" id="input-add-gallery">
-
-					<label for="all_categorie">Catégorie</label>
-					<select name="category" id="all_categorie">
-						<!-- <option value="" selected>Choisir une catégorie</option> -->
-
-					</select>
 					<hr>
-					<input type="submit" value="valider" class="btn-valid">
-				</form>
+					<div class="modal-btn">Ajouter une photo</div>
+				</div>
+
+				<div class="ajout-photo">
+					
+					<div class="modal-body">
+						<form action="#" method="post" class="add_gallery">
+							<div class="image">
+								<div class="img-container">
+									<div class="image_head"><i class="fa-regular fa-image"></i></div><br>
+
+									<input type="file" name="image" id="imageInput" accept="image/*">
+									<label for="imageInput">
+										<i class="fa-solid fa-plus"></i>Ajouter photo
+									</label>
+
+									<p class="format">jpg, png : 4mo max</p>
+								</div>
+
+								<!-- image de previsualisation -->
+								<div class="img-preview">
+									<!-- <img src="./assets/images/restaurant-sushisen-londres.png" alt="" class="image-preview"> -->
+
+								</div>
+							</div>
+
+							<label for="input-add-gallery">Titre</label>
+							<input type="text" name="title" id="input-add-gallery">
+
+							<label for="all_categorie">Catégorie</label>
+							<select name="category" id="all_categorie">
+								<!-- <option value="" selected>Choisir une catégorie</option> -->
+
+							</select>
+							<hr>
+							<input type="submit" value="valider" class="btn-valid">
+						</form>
+					</div>
+				</div>
 
 			</div>
-
-			</div>
-
-		</section>
+		</aside>
 
 		<section id="contact">
 			<h2>Contact</h2>

@@ -113,6 +113,10 @@ async function AjoutPostModal() {
                             //une fois supprimer le traveau, enlever le post dans le modal et le DOM
                             containerElementModal.innerHTML = "";
 
+                            document.querySelector('.gallery').innerHTML = "";
+                            AjoutPost();
+
+
                         } else {
                             alert("Echec! une erreur est survenue")
                         }
@@ -135,7 +139,7 @@ async function RecupCateg() {
         // console.log(url);
         const categ = await fetch(url);
         const res = await categ.json();
-
+        
         //parcourir mes post traveaux
         for (let i = 0; i < res.length; i++) {
 
@@ -161,7 +165,6 @@ async function RecupCateg() {
 
             // optionSelect.appendChild(allCategories);
             allCategories.appendChild(optionSelect);
-
 
             //filtrer mes traveaux par categories
             const urlFilter = "http://localhost:5678/api/works";
@@ -214,7 +217,7 @@ async function RecupCateg() {
     }
 }
 //btn filter tous
-const filterTous = document.querySelector('.categories .filter_Tous');
+const filterTous = document.querySelector('.filter_Tous');
 filterTous.addEventListener("click", () => {
     //Effacer tous les traveaux dans le DOM
     document.querySelector('.gallery').innerHTML = "";
@@ -258,11 +261,20 @@ async function SendTraveaux(token, formData) {
                 alert(`le projet a été ajouté avec succès. `);
                 // window.location.href="index.html";
                 // console.log('succèss')
+                
+                //vider les composants et charger de nouveaux
+                document.querySelector('.categories').innerHTML = "";
+                document.querySelector('.gallery').innerHTML = "";
+                document.querySelector('.gallery-modal').innerHTML = "";
+
+                //faire appel de nouveaux et injecter les moses à jour
+                RecupCateg();
                 AjoutPost();
+                AjoutPostModal();
 
 
             } else {
-                alert(token)
+                alert("Echec! une erreur est survenue ");
                 // console.log('echec')
             }
         })
@@ -272,44 +284,50 @@ async function SendTraveaux(token, formData) {
 }
 
 //boite modal
-let portfolio = document.querySelector("#portfolio");
 const modifTrav = document.querySelector('.modif-tr');
+const modal = document.querySelector('.modal');
 
-const modalTrav = document.querySelector('section.gallery-photo');
-const modalAjout = document.querySelector('section.ajout-photo');
+const modalTrav = document.querySelector('.gallery-photo');
 
-const closeModalTrav = document.querySelector('.icon-x .fa-xmark');
+const modalAjout = document.querySelector('.ajout-photo');
 
-const closeModalAjout = document.querySelector('.icons .fa-xmark');
-const showModalTravBtn = document.querySelector('.icons .fa-arrow-left-long');
+
+const closeModal = document.querySelector('.icons .fa-xmark');
+const ReturnShowGallery = document.querySelector('.icons .fa-arrow-left-long');
 
 const modalBtn = document.querySelector('.modal-btn');
 
-
+//titre modal
+const titleModal = document.querySelector('.title-modal');
 
 modifTrav.addEventListener('click', function () {
-    modalTrav.style.display = "block";
-    portfolio.classList.add('active');
+    modal.style.display = "flex";
+    titleModal.innerHTML = "Galerie Photo";
+   ReturnShowGallery.style.opacity = 0;
+
 })
 
-closeModalTrav.addEventListener("click", function () {
-    modalTrav.style.display = "none";
-    portfolio.classList.remove('active');
-})
-
-closeModalAjout.addEventListener('click', () => {
-    modalAjout.style.display = "none";
-    portfolio.classList.remove('active');
-})
-showModalTravBtn.addEventListener('click', function () {
+closeModal.addEventListener("click", function () {
+    modal.style.display = "none";
     modalTrav.style.display = "block";
     modalAjout.style.display = "none";
-    portfolio.classList.add('active');
+})
+
+
+ReturnShowGallery.addEventListener('click', function () {
+    modalTrav.style.display = "block";
+    modalAjout.style.display = "none";
+   this.style.opacity = 0;
+   titleModal.innerHTML = "Galerie Photo";
+   
+
 })
 modalBtn.addEventListener('click', () => {
     modalAjout.style.display = "block";
+    ReturnShowGallery.style.opacity = 1;
     modalTrav.style.display = "none";
-    portfolio.classList.add('active');
+    titleModal.innerHTML = "Ajout photo";
+
 })
 
 
@@ -328,11 +346,12 @@ const buttonSendFile = document.querySelector('.btn-valid');
 const imageInput = document.getElementById('imageInput');
 // const imageURL = URL.createObjectURL(imageInput);
 
+const containerImgPreview = document.querySelector('.image .img-preview');
+const containerImgheader = document.querySelector('.image .img-container');
 
 imageInput.addEventListener('change', () =>{
+
     const uploadFile = imageInput.files[0];
-    const containerImgPreview = document.querySelector('.image .img-preview');
-    const containerImgheader = document.querySelector('.image .img-container');
     const containerImage = document.querySelector('.image');
     const imgPreview = document.createElement('img');
     
@@ -341,7 +360,8 @@ imageInput.addEventListener('change', () =>{
     // imgPreview.append();
     // console.log(imgPreview);
     imgPreview.classList.add('image-preview');
-    containerImage.appendChild(imgPreview);
+
+    containerImgPreview.appendChild(imgPreview);
 })
 
 
@@ -362,13 +382,6 @@ formAddFile.addEventListener("submit", (event) => {
     const title = addFileInput.value;
     const category = categFile.value;
     const image = imageInput.files[0];
-
-
-    // console.log(image.name);
-
-    // const formData_gallery = new FormData(formAddFile);
-
-
 
     // console.log(imageInput); 
 
@@ -404,8 +417,17 @@ formAddFile.addEventListener("submit", (event) => {
             //on exécute la fonction
             const final = SendTraveaux(tokenUser, formData);
             if(final){
+                //vider tous les inputs du form
+                containerImgPreview.classList.add('active');
+                containerImgheader.style.display = "block";
+
+                formAddFile.reset();
+                
+                modal.style.display = "none";
+                modalTrav.style.display = "block";
                 modalAjout.style.display = "none";
-                portfolio.classList.remove('active');
+                // this.style.opacity = 0;
+                // titleModal.innerHTML = "Galerie Photo";
 
                 // document.querySelector('.gallery').innerHTML = "";
 

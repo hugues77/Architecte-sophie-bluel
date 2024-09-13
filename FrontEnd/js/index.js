@@ -1,5 +1,5 @@
 
-// function pour Ajout des post 
+// function pour Ajout des post - gallery
 async function AjoutPost() {
     try {
         //Recuperation des données depuis notre API
@@ -93,35 +93,41 @@ async function AjoutPostModal() {
             iElement.classList.add("fa-regular", "fa-trash-can");
 
             const dataValue = articleModal.id;
+            const dataName = articleModal.title;
+
             iElement.setAttribute('data-id', dataValue);
 
             //selectionner le bouton supprimer
 
             iElement.addEventListener('click', async function () {
-                // alert('delete post :' + dataValue);
-                await fetch("http://localhost:5678/api/works/" + dataValue, {
-                    method: "DELETE",
-                    headers: {
-                        "Authorization": `Bearer ${isLogin}`
-                    }
-                })
-                    .then(response => {
-                        //    console.log(response);
-                        if (response.ok) {
-                            // alert(`le traveaux n° ${dataValue} à été supprimé avec succès `);
-                            // window.location.href="index.html";
-                            //une fois supprimer le traveau, enlever le post dans le modal et le DOM
-                            containerElementModal.innerHTML = "";
-
-                            document.querySelector('.gallery').innerHTML = "";
-                            AjoutPost();
-
-
-                        } else {
-                            alert("Echec! une erreur est survenue")
+                //poser la question avant suppression du traveaux
+                const confirmAlert = confirm(`Voulez-vous vraiment supprimer le projet  ${dataName} ?`);
+                if (confirmAlert) {
+                    // alert('delete post :' + dataValue);
+                    await fetch("http://localhost:5678/api/works/" + dataValue, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${isLogin}`
                         }
                     })
+                        .then(response => {
+                            //    console.log(response);
+                            if (response.ok) {
 
+                                // alert(`le traveaux n° ${dataValue} à été supprimé avec succès `);
+                                // window.location.href="index.html";
+                                //une fois supprimer le traveau, enlever le post dans le modal et le DOM
+                                containerElementModal.innerHTML = "";
+
+                                document.querySelector('.gallery').innerHTML = "";
+                                AjoutPost();
+
+
+                            } else {
+                                alert("Echec! une erreur est survenue")
+                            }
+                        })
+                }
             })
 
 
@@ -131,6 +137,7 @@ async function AjoutPostModal() {
         console.log('Problème lors de chargement des traveaux', error);
     }
 }
+
 //function pour recuperer des catégories
 async function RecupCateg() {
     try {
@@ -139,7 +146,7 @@ async function RecupCateg() {
         // console.log(url);
         const categ = await fetch(url);
         const res = await categ.json();
-        
+
         //parcourir mes post traveaux
         for (let i = 0; i < res.length; i++) {
 
@@ -216,6 +223,7 @@ async function RecupCateg() {
         console.log('Problème lors de chargement des categories', error);
     }
 }
+
 //btn filter tous
 const filterTous = document.querySelector('.filter_Tous');
 filterTous.addEventListener("click", () => {
@@ -224,7 +232,7 @@ filterTous.addEventListener("click", () => {
     AjoutPost();
 })
 
-//verifier si user est connecter
+//verifier si user est connecter - Authentification
 const isLogin = window.localStorage.getItem('token');
 const loginItem = document.querySelector("ul .login_item");
 if (isLogin) {
@@ -244,7 +252,7 @@ if (isLogin) {
 
 }
 
-//function pour envoyer des fichier
+//function SendTraveaux pour envoyer des fichier dans l'API
 
 async function SendTraveaux(token, formData) {
 
@@ -261,7 +269,7 @@ async function SendTraveaux(token, formData) {
                 alert(`le projet a été ajouté avec succès. `);
                 // window.location.href="index.html";
                 // console.log('succèss')
-                
+
                 //vider les composants et charger de nouveaux
                 document.querySelector('.categories').innerHTML = "";
                 document.querySelector('.gallery').innerHTML = "";
@@ -283,7 +291,7 @@ async function SendTraveaux(token, formData) {
         })
 }
 
-//boite modal
+//Traitement boite modal
 const modifTrav = document.querySelector('.modif-tr');
 const modal = document.querySelector('.modal');
 
@@ -299,29 +307,50 @@ const modalBtn = document.querySelector('.modal-btn');
 
 //titre modal
 const titleModal = document.querySelector('.title-modal');
-
+//ouvrir boite modal
 modifTrav.addEventListener('click', function () {
     modal.style.display = "flex";
     titleModal.innerHTML = "Galerie Photo";
-   ReturnShowGallery.style.opacity = 0;
+    ReturnShowGallery.style.opacity = 0;
 
 })
-
+//Fermeture boite modal
 closeModal.addEventListener("click", function () {
     modal.style.display = "none";
     modalTrav.style.display = "block";
     modalAjout.style.display = "none";
+
+    //fermer image de preview
+    containerImgPreview.classList.remove('active');
+
 })
 
+//Fermeture en dehors du modal
+document.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        modal.style.display = "none";
+        modalTrav.style.display = "block";
+        modalAjout.style.display = "none";
+        //fermer image de preview
+        containerImgPreview.classList.remove('active');
 
+    }
+
+})
+
+//fleche retour en arriere  du modal suppression post
 ReturnShowGallery.addEventListener('click', function () {
     modalTrav.style.display = "block";
     modalAjout.style.display = "none";
-   this.style.opacity = 0;
-   titleModal.innerHTML = "Galerie Photo";
-   
+    this.style.opacity = 0;
+    titleModal.innerHTML = "Galerie Photo";
+    containerImgPreview.classList.remove('active');
+
+
 
 })
+
+//btn ajout photo pour aller vers la vue ajout post 
 modalBtn.addEventListener('click', () => {
     modalAjout.style.display = "block";
     ReturnShowGallery.style.opacity = 1;
@@ -331,7 +360,7 @@ modalBtn.addEventListener('click', () => {
 })
 
 
-//function ajout photo dans notre API
+//Traitement Ajout photo dans notre API
 const formAddFile = document.querySelector(".ajout-photo .add_gallery");
 const imgContainer = document.querySelector(".ajout-photo .img-container");
 const errorModal = document.querySelector(".form_error_modal");
@@ -348,15 +377,16 @@ const imageInput = document.getElementById('imageInput');
 
 const containerImgPreview = document.querySelector('.image .img-preview');
 const containerImgheader = document.querySelector('.image .img-container');
+const imgPreview = document.createElement('img');
 
-imageInput.addEventListener('change', () =>{
+
+imageInput.addEventListener('change', () => {
 
     const uploadFile = imageInput.files[0];
     const containerImage = document.querySelector('.image');
-    const imgPreview = document.createElement('img');
-    
+
     imgPreview.src = URL.createObjectURL(uploadFile);
-    containerImgheader.style.display ="none";
+    containerImgheader.style.display = "none";
     // imgPreview.append();
     // console.log(imgPreview);
     imgPreview.classList.add('image-preview');
@@ -375,7 +405,7 @@ addFileInput.addEventListener('keyup', () => {
     }
 })
 
-//traitement formulaire
+//traitement formulaire envoie photo
 formAddFile.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -384,7 +414,7 @@ formAddFile.addEventListener("submit", (event) => {
     const image = imageInput.files[0];
 
     // console.log(imageInput); 
-
+    //verifier si les champs sont vides
     if (title === "" || category === "" || image == null) {
         // alert('remplir les champs svp');
         errorModal.style.display = "block";
@@ -394,17 +424,20 @@ formAddFile.addEventListener("submit", (event) => {
         let imageType = image.type;
         let imageName = image.name;
         let imageSize = image.size;
-        //on  verifie l'image
+        //on  verifie la taille de l'image
         if (imageSize > 4000000) {
             errorModal.style.display = "block";
             errorModal.textContent = "la taille du fichier ne doit pas depasser 4 Mo";
 
         } else if (!["image/jpeg", "image/png"].includes(imageType)) {
+            //on  verifie le type de l'image(png ou jpeg)
+
             errorModal.style.display = "block";
             errorModal.textContent = "le type du fichier n'est pas autorisé";
 
         } else {
-            //envoie du fichier vers l'API  par la method POST
+
+            //Dabord recuperer le token pour autoriser l'envoie
             let tokenUser = localStorage.getItem('token');
             const formData = new FormData();
 
@@ -414,40 +447,39 @@ formAddFile.addEventListener("submit", (event) => {
 
             // console.log(tokenUser);
 
-            //on exécute la fonction
+            //Puis on exécute la fonction, pour envoyer le fichier vers l'API  par la method POST
             const final = SendTraveaux(tokenUser, formData);
-            if(final){
-                //vider tous les inputs du form
-                containerImgPreview.classList.add('active');
-                containerImgheader.style.display = "block";
+            if (final) {
 
+                //vider tous les inputs du form
                 formAddFile.reset();
-                
+
                 modal.style.display = "none";
                 modalTrav.style.display = "block";
                 modalAjout.style.display = "none";
-                // this.style.opacity = 0;
-                // titleModal.innerHTML = "Galerie Photo";
+                errorModal.style.display = "none";
 
-                // document.querySelector('.gallery').innerHTML = "";
+                // containerImgPreview.style.opacity = 0;
+                containerImgheader.style.display = "block";
+                buttonSendFile.classList.remove('active');
 
-                // AjoutPost();
-                // console.log('super!')
+                document.querySelector("select").innerHTML = "";
+                document.querySelector(".img-preview .image-preview").remove();
+
             }
         }
     }
-    
+
 
 
 })
 
 
-
-
-
 AjoutPost();
 AjoutPostModal();
 RecupCateg();
+
+
 
 
 
